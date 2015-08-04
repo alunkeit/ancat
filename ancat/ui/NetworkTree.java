@@ -29,104 +29,109 @@ import org.apache.log4j.Logger;
 /**
  * @author alunkeit
  * 
+ *         Implementation of a TreeView control on the left side of the UI
  */
 public class NetworkTree extends JTree implements TreeSelectionListener
 {
-  private Logger _logger = Logger.getRootLogger();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7569619811160502403L;
 
-  private DefaultMutableTreeNode _networkConfig;
+	private Logger _logger = Logger.getRootLogger();
 
-  private MainFrame _mainFrame;
+	private DefaultMutableTreeNode _networkConfig;
 
-  public NetworkTree( MainFrame frame )
-  {
-    super( new DefaultMutableTreeNode( "network definition" ) );
+	private MainFrame _mainFrame;
 
-    _mainFrame = frame;
+	public NetworkTree(MainFrame frame)
+	{
+		super(new DefaultMutableTreeNode("network definition"));
 
-    setRootVisible( true );
+		_mainFrame = frame;
 
-    setExpandsSelectedPaths( true );
+		setRootVisible(true);
 
-    addTreeSelectionListener( this );
-  }
+		setExpandsSelectedPaths(true);
 
-  public void setNetworkConfiguration( File f )
-  {
-    _logger.debug( "NetworkTree: setNetworkFile : " + f.getAbsolutePath() );
+		addTreeSelectionListener(this);
+	}
 
-    _networkConfig = new DefaultMutableTreeNode( f.getName() );
+	public void setNetworkConfiguration(File f)
+	{
+		_logger.debug("NetworkTree: setNetworkFile : " + f.getAbsolutePath());
 
-    ((DefaultMutableTreeNode) getModel().getRoot()).add( _networkConfig );
+		_networkConfig = new DefaultMutableTreeNode(f.getName());
 
-    setSelectionPath( new TreePath( _networkConfig.getPath() ) );
+		((DefaultMutableTreeNode) getModel().getRoot()).add(_networkConfig);
 
-    updateView();
-  }
+		setSelectionPath(new TreePath(_networkConfig.getPath()));
 
-  public void addNetwork( String name )
-  {
-    DefaultMutableTreeNode n = new DefaultMutableTreeNode( name );
+		updateView();
+	}
 
-    _networkConfig.add( n );
+	public void addNetwork(String name)
+	{
+		DefaultMutableTreeNode n = new DefaultMutableTreeNode(name);
 
-    setSelectionPath( new TreePath( n.getPath() ) );
+		_networkConfig.add(n);
 
-    updateView();
-  }
+		setSelectionPath(new TreePath(n.getPath()));
 
-  protected void updateView()
-  {
-    EventQueue.invokeLater( new Runnable()
-    {
-      public void run()
-      {
+		updateView();
+	}
 
-        // expandAll();
-        updateUI();
-      }
-    } );
+	protected void updateView()
+	{
+		EventQueue.invokeLater(new Runnable()
+		{
+			public void run()
+			{
 
-  }
+				// expandAll();
+				updateUI();
+			}
+		});
 
-  protected void expandAll()
-  {
-    int i = this.getRowCount();
+	}
 
-    int j = 0;
+	protected void expandAll()
+	{
+		int i = this.getRowCount();
 
-    while( j < i )
-    {
-      this.expandRow( j );
-      j += 1;
-      i = getRowCount();
-    }
-  }
+		int j = 0;
 
-  public void activate()
-  {
+		while (j < i)
+		{
+			this.expandRow(j);
+			j += 1;
+			i = getRowCount();
+		}
+	}
 
-  }
+	public void activate()
+	{
 
-  @Override
-  public void valueChanged( TreeSelectionEvent e )
-  {
-    _logger.debug( "tree selection has changed" );
+	}
 
-    if( e.getSource() != getModel().getRoot() && e.getSource() != _networkConfig )
-    {
-      TreePath path = e.getNewLeadSelectionPath();
+	@Override
+	public void valueChanged(TreeSelectionEvent e)
+	{
+		_logger.debug("tree selection has changed");
 
-      if( path != null )
-      {
-        DefaultMutableTreeNode selectedNode =
-            (DefaultMutableTreeNode) path.getLastPathComponent();
+		if (e.getSource() != getModel().getRoot() && e.getSource() != _networkConfig)
+		{
+			TreePath path = e.getNewLeadSelectionPath();
 
-        _logger.debug( "selected node: " + selectedNode );
+			if (path != null)
+			{
+				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
 
-        _mainFrame.setActiveView( (String) selectedNode.getUserObject() );
-      }
-    }
+				_logger.debug("selected node: " + selectedNode);
 
-  }
+				_mainFrame.setActiveView((String) selectedNode.getUserObject());
+			}
+		}
+
+	}
 }
